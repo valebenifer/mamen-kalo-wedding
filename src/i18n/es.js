@@ -137,7 +137,7 @@ export default {
   },
   footer: { made: 'Hecho con cariño en la Costa del Sol', hashtag: '#MamenYKalo' },
   admin: {
-    login: { title: 'Panel de novios', username: 'Usuario', password: 'Contraseña', submit: 'Entrar', error: 'Usuario o contraseña incorrectos.', rate: 'Demasiados intentos. Espera unos minutos.', close: 'Cerrar' },
+    login: { serverError: 'No se puede conectar con el servidor.', title: 'Panel de novios', username: 'Usuario', password: 'Contraseña', submit: 'Entrar', error: 'Usuario o contraseña incorrectos.', rate: 'Demasiados intentos. Espera unos minutos.', close: 'Cerrar' },
     logout: 'Salir',
     back: 'Volver a la web',
     hello: 'Hola',

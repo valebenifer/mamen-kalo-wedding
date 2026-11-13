@@ -9,5 +9,5 @@ export default defineConfig({
   root,
   plugins: [react()],
   resolve: { dedupe: ['react', 'react-dom'] },
-  server: { port: 5173, proxy: { '/api': 'http://localhost:3001' } },
+  server: { port: 5183, strictPort: true, proxy: { '/api': 'http://127.0.0.1:3011' } },
 });

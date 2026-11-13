@@ -26,9 +26,9 @@ export function AdminLogin({ onLogin, onClose }) {
         onLogin(data.token, data.user);
         return;
       }
-      setError(res.status === 429 ? a.rate : a.error);
+      setError(res.status === 429 ? a.rate : res.status === 401 ? a.error : a.serverError);
     } catch {
-      setError(a.error);
+      setError(a.serverError);
     }
     setBusy(false);
   }

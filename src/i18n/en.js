@@ -137,7 +137,7 @@ export default {
   },
   footer: { made: 'Made with love on the Costa del Sol', hashtag: '#MamenAndKalo' },
   admin: {
-    login: { title: 'Couple’s dashboard', username: 'Username', password: 'Password', submit: 'Sign in', error: 'Wrong username or password.', rate: 'Too many attempts. Wait a few minutes.', close: 'Close' },
+    login: { serverError: 'Cannot reach the server.', title: 'Couple’s dashboard', username: 'Username', password: 'Password', submit: 'Sign in', error: 'Wrong username or password.', rate: 'Too many attempts. Wait a few minutes.', close: 'Close' },
     logout: 'Sign out',
     back: 'Back to the site',
     hello: 'Hello',

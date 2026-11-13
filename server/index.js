@@ -18,7 +18,7 @@ if (fs.existsSync(envFile)) {
 }
 
 const PROD = process.env.NODE_ENV === 'production';
-const PORT = Number(process.env.PORT) || 3001;
+const PORT = Number(process.env.PORT) || 3011;
 const USERS = ['mamen', 'kalo', 'wedding'];
 
 const credentials = {};

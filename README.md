@@ -6,7 +6,7 @@ Vite + React (frontend) y Express (API + panel admin). Trilingüe: ES / EN / BG.
 
 ```bash
 npm install
-npm run dev      # web en http://localhost:5173, API en :3001
+npm run dev      # web en http://localhost:5183, API en :3011
 ```
 
 Producción:
@@ -14,7 +14,7 @@ Producción:
 ```bash
 cp .env.example .env   # define AUTH_SECRET y las 3 contraseñas
 npm run build
-NODE_ENV=production npm start   # sirve web + API en el puerto 3001
+NODE_ENV=production npm start   # sirve web + API en el puerto 3011
 ```
 
 ## Personalizar
