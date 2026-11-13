@@ -267,3 +267,6 @@ tr.declined td { color: var(--muted); }
   td:last-child::before { display: none; }
   .comment-cell { max-width: none; }
 }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+@media (max-width: 860px) { .hero-actions { justify-content: center; } }

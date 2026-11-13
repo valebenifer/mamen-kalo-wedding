@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n/provider.jsx';
-import { WEDDING, ceremonyDate } from '../config.js';
+import { WEDDING, ceremonyDate, googleCalendarUrl } from '../config.js';
 import { Icon } from './common.jsx';
 
 function useCountdown() {
@@ -46,9 +46,14 @@ export default function Hero() {
             ))}
           </div>
 
-          <a className="btn btn-primary" href="#rsvp">
+          <div className="hero-actions">
+            <a className="btn btn-primary" href="#rsvp">
             {t.hero.cta} <Icon name="arrow" size={18} />
           </a>
+            <a className="btn btn-outline" target="_blank" rel="noopener noreferrer" href={googleCalendarUrl({ title: t.hero.calendarTitle, details: t.hero.calendarDetails })}>
+              <Icon name="calendar" size={18} /> {t.hero.calendar}
+            </a>
+          </div>
         </div>
 
         <div className="hero-photo">
