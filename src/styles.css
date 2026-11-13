@@ -270,3 +270,6 @@ tr.declined td { color: var(--muted); }
 
 .hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
 @media (max-width: 860px) { .hero-actions { justify-content: center; } }
+
+.contact { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.contact small { color: var(--muted); font-size: 0.82rem; overflow-wrap: anywhere; }

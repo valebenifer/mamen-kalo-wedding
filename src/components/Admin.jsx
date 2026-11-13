@@ -259,9 +259,11 @@ export function AdminDashboard({ user, onLogout, onClose }) {
                   <td data-label={a.table.intolerances}>{g.intolerances || '—'}</td>
                   <td data-label={a.table.bus}>{g.attending ? labels.bus[g.bus] : '—'}</td>
                   <td data-label={a.table.contact}>
-                    {g.rec.contactName}
-                    {g.rec.email && <small><br />{g.rec.email}</small>}
-                    {g.rec.phone && <small><br />{g.rec.phone}</small>}
+                    <div className="contact">
+                      <span>{g.rec.contactName}</span>
+                      {g.rec.email && <small>{g.rec.email}</small>}
+                      {g.rec.phone && <small>{g.rec.phone}</small>}
+                    </div>
                   </td>
                   <td data-label={a.table.comment} className="comment-cell">{g.rec.comment || '—'}</td>
                   <td data-label={a.table.date}>{fmt(g.rec.createdAt)}</td>
