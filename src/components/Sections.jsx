@@ -15,7 +15,7 @@ export function Venues() {
         <SectionHead eyebrow={v.eyebrow} title={v.title} subtitle={v.subtitle} />
         <div className="venues">
           {cards.map((c, i) => (
-            <article key={c.name} className={`venue reveal ${i % 2 ? 'flip' : ''}`}>
+            <article key={i} className={`venue reveal ${i % 2 ? 'flip' : ''}`}>
               <div className="arch venue-photo">
                 <img src={c.img} alt={c.alt} width={c.w} height={c.h} loading="lazy" />
               </div>
@@ -125,8 +125,8 @@ export function Tips() {
       <div className="container">
         <SectionHead eyebrow={tp.eyebrow} title={tp.title} />
         <div className="cards four">
-          {tp.items.map((it) => (
-            <article key={it.title} className="card tip reveal">
+          {tp.items.map((it, i) => (
+            <article key={i} className="card tip reveal">
               <Icon name={it.icon} size={30} className="card-icon" />
               <h3>{it.title}</h3>
               <p>{it.text}</p>

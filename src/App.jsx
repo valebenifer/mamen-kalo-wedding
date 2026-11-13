@@ -6,6 +6,7 @@ import Rsvp from './components/Rsvp.jsx';
 import { AdminLogin, AdminDashboard } from './components/Admin.jsx';
 import { useReveal } from './components/common.jsx';
 import { currentAdmin, logout } from './api.js';
+import { useI18n } from './i18n/provider.jsx';
 
 // GitHub Pages no admite rutas tipo /admin al recargar, así que el panel vive en #/admin
 const isAdminHash = () => window.location.hash.startsWith('#/admin');
@@ -13,6 +14,7 @@ const isAdminHash = () => window.location.hash.startsWith('#/admin');
 export default function App() {
   const [admin, setAdmin] = useState(isAdminHash);
   const [user, setUser] = useState(currentAdmin);
+  const { lang } = useI18n();
 
   useEffect(() => {
     const on = () => setAdmin(isAdminHash());
@@ -20,7 +22,7 @@ export default function App() {
     return () => window.removeEventListener('hashchange', on);
   }, []);
 
-  useReveal(admin);
+  useReveal(`${admin}-${lang}`);
 
   const openAdmin = () => {
     window.location.hash = '/admin';
