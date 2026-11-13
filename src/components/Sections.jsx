@@ -6,8 +6,8 @@ export function Venues() {
   const { t } = useI18n();
   const v = t.venues;
   const cards = [
-    { ...v.church, img: '/images/iglesia.webp', w: 1100, h: 1650, map: MAPS.church },
-    { ...v.cortijo, img: '/images/cortijo.webp', w: 1280, h: 854, map: MAPS.cortijo },
+    { ...v.church, img: `${import.meta.env.BASE_URL}images/iglesia.webp`, w: 1100, h: 1650, map: MAPS.church },
+    { ...v.cortijo, img: `${import.meta.env.BASE_URL}images/cortijo.webp`, w: 1280, h: 854, map: MAPS.cortijo },
   ];
   return (
     <section className="section" id="venues">

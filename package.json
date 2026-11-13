@@ -5,21 +5,19 @@
   "type": "module",
   "description": "Web de boda de Mamen & Kalo",
   "scripts": {
-    "dev": "concurrently -k -n api,web -c yellow,cyan \"node --watch server/index.js\" \"vite\"",
+    "dev": "vite",
     "build": "vite build",
-    "start": "node server/index.js",
+    "preview": "vite preview",
     "images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
     "@fontsource/jost": "^5.3.0",
-    "express": "^5.3.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",
-    "concurrently": "^9.2.5",
     "sharp": "^0.35.5",
     "vite": "^6.4.6"
   }

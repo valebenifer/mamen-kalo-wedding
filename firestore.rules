@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Solo estos tres usuarios (creados a mano en Authentication) pueden leer o borrar.
+    // Importante: Firebase permite a cualquiera registrarse con la API key pública,
+    // por eso se comprueba el correo y no solo "request.auth != null".
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email in [
+        'mamen@boda-mamen-kalo.app',
+        'kalo@boda-mamen-kalo.app',
+        'wedding@boda-mamen-kalo.app'
+      ];
+    }
+
+    match /rsvps/{id} {
+      allow read, delete: if isAdmin();
+      allow update: if false;
+
+      // Cualquier invitado puede CREAR una respuesta (con validación básica de tamaños)
+      allow create: if request.resource.data.keys().hasOnly(['createdAt', 'contactName', 'email', 'phone', 'comment', 'guests'])
+        && request.resource.data.contactName is string
+        && request.resource.data.contactName.size() > 0
+        && request.resource.data.contactName.size() <= 100
+        && request.resource.data.email is string && request.resource.data.email.size() <= 150
+        && request.resource.data.phone is string && request.resource.data.phone.size() <= 40
+        && request.resource.data.comment is string && request.resource.data.comment.size() <= 1500
+        && request.resource.data.createdAt is string && request.resource.data.createdAt.size() <= 40
+        && request.resource.data.guests is list
+        && request.resource.data.guests.size() >= 1
+        && request.resource.data.guests.size() <= 15;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

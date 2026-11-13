@@ -58,7 +58,7 @@ export default function Hero() {
 
         <div className="hero-photo">
           <div className="arch">
-            <img src="/images/novios.webp" alt={t.hero.photoAlt} width="1280" height="960" fetchPriority="high" />
+            <img src={`${import.meta.env.BASE_URL}images/novios.webp`} alt={t.hero.photoAlt} width="1280" height="960" fetchPriority="high" />
           </div>
         </div>
       </div>

@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useI18n } from '../i18n/provider.jsx';
 import { Icon, Logo } from './common.jsx';
-
-const TOKEN_KEY = 'adminToken';
-const USER_KEY = 'adminUser';
+import { DEMO, login, listRsvps, deleteRsvp, toCsv } from '../api.js';
 
 export function AdminLogin({ onLogin, onClose }) {
   const { t } = useI18n();
@@ -18,17 +16,10 @@ export function AdminLogin({ onLogin, onClose }) {
     setBusy(true);
     setError('');
     try {
-      const res = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok) {
-        sessionStorage.setItem(TOKEN_KEY, data.token);
-        sessionStorage.setItem(USER_KEY, data.user);
-        onLogin(data.token, data.user);
-        return;
-      }
-      setError(res.status === 429 ? a.rate : res.status === 401 ? a.error : a.serverError);
-    } catch {
-      setError(a.serverError);
+      onLogin(await login(username, password));
+      return;
+    } catch (err) {
+      setError(err.code === 'rate' ? a.rate : err.code === 'invalid' ? a.error : a.serverError);
     }
     setBusy(false);
   }
@@ -57,6 +48,7 @@ export function AdminLogin({ onLogin, onClose }) {
         <button type="button" className="link-btn" onClick={onClose}>
           {t.admin.back}
         </button>
+        {DEMO && <p className="muted small">Modo demo (Firebase sin configurar): usuario mamen · contraseña mamen-demo</p>}
       </form>
     </main>
   );
@@ -89,8 +81,8 @@ function Bars({ title, rows }) {
   );
 }
 
-export function AdminDashboard({ token, user, onLogout, onClose }) {
-  const { t, lang } = useI18n();
+export function AdminDashboard({ user, onLogout, onClose }) {
+  const { t } = useI18n();
   const a = t.admin;
   const r = t.rsvp;
   const [data, setData] = useState(null);
@@ -98,27 +90,23 @@ export function AdminDashboard({ token, user, onLogout, onClose }) {
   const [q, setQ] = useState('');
   const [filter, setFilter] = useState('all');
 
-  const authed = useCallback(
-    async (url, opts = {}) => {
-      const res = await fetch(url, { ...opts, headers: { ...(opts.headers || {}), Authorization: `Bearer ${token}` } });
-      if (res.status === 401) {
-        onLogout(a.sessionExpired);
-        throw new Error('401');
-      }
-      return res;
+  // Si la sesión caduca o no tiene permiso, vuelve al login
+  const guard = useCallback(
+    (err) => {
+      if (err.code === 'unauthorized' || err.code === 'forbidden') onLogout();
+      else setError(a.loadError);
     },
-    [token, onLogout, a.sessionExpired],
+    [onLogout, a.loadError],
   );
 
   const load = useCallback(async () => {
     setError('');
     try {
-      const res = await authed('/api/admin/rsvps');
-      setData(await res.json());
+      setData(await listRsvps());
     } catch (e) {
-      if (e.message !== '401') setError(a.loadError);
+      guard(e);
     }
-  }, [authed, a.loadError]);
+  }, [guard]);
 
   useEffect(() => {
     load();
@@ -164,8 +152,7 @@ export function AdminDashboard({ token, user, onLogout, onClose }) {
   const fmt = (iso) => new Intl.DateTimeFormat(t.meta.locale, { dateStyle: 'short', timeStyle: 'short' }).format(new Date(iso));
 
   async function exportCsv() {
-    const res = await authed('/api/admin/export.csv');
-    const url = URL.createObjectURL(await res.blob());
+    const url = URL.createObjectURL(new Blob([toCsv(data || [])], { type: 'text/csv;charset=utf-8' }));
     const el = Object.assign(document.createElement('a'), { href: url, download: 'invitados.csv' });
     el.click();
     URL.revokeObjectURL(url);
@@ -173,8 +160,12 @@ export function AdminDashboard({ token, user, onLogout, onClose }) {
 
   async function remove(rec) {
     if (!window.confirm(a.table.confirmDelete)) return;
-    await authed(`/api/admin/rsvps/${rec.id}`, { method: 'DELETE' });
-    load();
+    try {
+      await deleteRsvp(rec.id);
+      load();
+    } catch (e) {
+      guard(e);
+    }
   }
 
   return (
@@ -288,14 +279,4 @@ export function AdminDashboard({ token, user, onLogout, onClose }) {
       </section>
     </main>
   );
-}
-
-export function useAdminSession() {
-  const [session, setSession] = useState(() => ({ token: sessionStorage.getItem(TOKEN_KEY), user: sessionStorage.getItem(USER_KEY) }));
-  const logout = useCallback(() => {
-    sessionStorage.removeItem(TOKEN_KEY);
-    sessionStorage.removeItem(USER_KEY);
-    setSession({ token: null, user: null });
-  }, []);
-  return { session, setSession, logout };
 }

@@ -25,7 +25,7 @@ export default function Header({ onAdmin, onHome, solid = false }) {
     <header className={`site-header ${scrolled || solid || open ? 'solid' : ''}`}>
       <div className="header-inner">
         <a
-          href="/"
+          href="#"
           className="brand"
           aria-label="Mamen & Kalo"
           onClick={(e) => {
@@ -38,7 +38,7 @@ export default function Header({ onAdmin, onHome, solid = false }) {
 
         <nav className={`nav ${open ? 'open' : ''}`} aria-label="principal">
           {LINKS.map((k) => (
-            <a key={k} href={`/#${k}`} onClick={(e) => { e.preventDefault(); go(k); }}>
+            <a key={k} href={`#${k}`} onClick={(e) => { e.preventDefault(); go(k); }}>
               {t.nav[k]}
             </a>
           ))}

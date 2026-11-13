@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useI18n } from '../i18n/provider.jsx';
 import { Icon, SectionHead } from './common.jsx';
+import { submitRsvp } from '../api.js';
 
 let seq = 0;
 const newGuest = () => ({ key: ++seq, name: '', type: 'adult', attending: true, diet: 'none', intolerances: '', bus: 'both' });
@@ -43,26 +44,23 @@ export default function Rsvp() {
     e.preventDefault();
     setError('');
     setStatus('sending');
+    if (honey) {
+      setStatus('done'); // anti-spam: un bot rellena el campo oculto; fingimos éxito
+      return;
+    }
     try {
-      const res = await fetch('/api/rsvp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...contact,
-          comment,
-          website: honey,
-          guests: guests.map(({ key, ...g }) => g),
-        }),
+      await submitRsvp({
+        contactName: contact.contactName.trim(),
+        email: contact.email.trim(),
+        phone: contact.phone.trim(),
+        comment: comment.trim(),
+        guests: guests.map(({ key, ...g }) => ({ ...g, name: g.name.trim(), intolerances: g.intolerances.trim(), bus: g.attending ? g.bus : 'none' })),
       });
-      if (res.ok) {
-        setStatus('done');
-        document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
-      const data = await res.json().catch(() => ({}));
-      setError(r.errors[data.error] || (res.status === 429 ? r.errors.rate : r.errors.generic));
-    } catch {
-      setError(r.errors.generic);
+      setStatus('done');
+      document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    } catch (err) {
+      setError(err.code === 'rate' ? r.errors.rate : r.errors.generic);
     }
     setStatus('idle');
   }
